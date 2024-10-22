@@ -3,7 +3,7 @@ data "azurerm_subscription" "current" {}
 # azurerm_consumption_budget_management_group
 resource "azurerm_consumption_budget_management_group" "budget" {
   for_each = {
-    for key, cbmg in lookup(var.config, "budget_management_groups", {}) : key => cbmg
+    for key, cbmg in lookup(var.config, "consumption_budget_management_groups", {}) : key => cbmg
   }
 
   name                = try(each.value.name, "cbmg-${each.key}")
@@ -20,7 +20,9 @@ resource "azurerm_consumption_budget_management_group" "budget" {
   }
 
   dynamic "notification" {
-    for_each = lookup(each.value, "notification", null) != null ? [each.value.notification] : []
+    for_each = {
+      for key, notification in lookup(each.value, "notifications", {}) : key => notification
+    }
     content {
       operator       = notification.value.operator
       threshold      = notification.value.threshold
@@ -36,7 +38,7 @@ resource "azurerm_consumption_budget_management_group" "budget" {
     content {
       dynamic "dimension" {
         for_each = {
-          for key, dimension in lookup(each.value, "dimensions", {}) : key => dimension
+          for key, dimension in lookup(filter.value, "dimensions", {}) : key => dimension
         }
         content {
           name     = dimension.value.name
@@ -46,12 +48,12 @@ resource "azurerm_consumption_budget_management_group" "budget" {
       }
       dynamic "tag" {
         for_each = {
-          for key, tag in lookup(each.value, "tags", {}) : key => tag
+          for key, tag in lookup(filter.value, "tags", {}) : key => tag
         }
         content {
-          name     = dimension.value.name
-          operator = try(dimension.value.operator, "In")
-          values   = dimension.value.values
+          name     = tag.value.name
+          operator = try(tag.value.operator, "In")
+          values   = tag.value.values
         }
       }
     }
@@ -78,7 +80,9 @@ resource "azurerm_consumption_budget_subscription" "budget" {
   }
 
   dynamic "notification" {
-    for_each = lookup(each.value, "notification", null) != null ? [each.value.notification] : []
+    for_each = {
+      for key, notification in lookup(each.value, "notifications", {}) : key => notification
+    }
     content {
       operator       = notification.value.operator
       threshold      = notification.value.threshold
@@ -96,7 +100,7 @@ resource "azurerm_consumption_budget_subscription" "budget" {
     content {
       dynamic "dimension" {
         for_each = {
-          for key, dimension in lookup(each.value, "dimensions", {}) : key => dimension
+          for key, dimension in lookup(filter.value, "dimensions", {}) : key => dimension
         }
         content {
           name     = dimension.value.name
@@ -106,12 +110,12 @@ resource "azurerm_consumption_budget_subscription" "budget" {
       }
       dynamic "tag" {
         for_each = {
-          for key, tag in lookup(each.value, "tags", {}) : key => tag
+          for key, tag in lookup(filter.value, "tags", {}) : key => tag
         }
         content {
-          name     = dimension.value.name
-          operator = try(dimension.value.operator, "In")
-          values   = dimension.value.values
+          name     = tag.value.name
+          operator = try(tag.value.operator, "In")
+          values   = tag.value.values
         }
       }
     }
@@ -138,7 +142,9 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
   }
 
   dynamic "notification" {
-    for_each = lookup(each.value, "notification", null) != null ? [each.value.notification] : []
+    for_each = {
+      for key, notification in lookup(each.value, "notifications", {}) : key => notification
+    }
     content {
       operator       = notification.value.operator
       threshold      = notification.value.threshold
@@ -156,7 +162,7 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
     content {
       dynamic "dimension" {
         for_each = {
-          for key, dimension in lookup(each.value, "dimensions", {}) : key => dimension
+          for key, dimension in lookup(filter.value, "dimensions", {}) : key => dimension
         }
         content {
           name     = dimension.value.name
@@ -166,12 +172,12 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
       }
       dynamic "tag" {
         for_each = {
-          for key, tag in lookup(each.value, "tags", {}) : key => tag
+          for key, tag in lookup(filter.value, "tags", {}) : key => tag
         }
         content {
-          name     = dimension.value.name
-          operator = try(dimension.value.operator, "In")
-          values   = dimension.value.values
+          name     = tag.value.name
+          operator = try(tag.value.operator, "In")
+          values   = tag.value.values
         }
       }
     }
