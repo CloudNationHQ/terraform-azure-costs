@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.2.0...v1.2.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* Remove redundant provider block ([#9](https://github.com/CloudNationHQ/terraform-azure-costs/issues/9)) ([0bfc5cd](https://github.com/CloudNationHQ/terraform-azure-costs/commit/0bfc5cdff82dd5a32780b3bdfcf159974b55eba7))
+
 ## [1.2.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.1.0...v1.2.0) (2025-01-20)
 
 
