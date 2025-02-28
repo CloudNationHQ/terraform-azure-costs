@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.1.0...v1.2.0) (2025-01-20)
+
+
+### Features
+
+* remove temporary files when deployment tests fails ([#5](https://github.com/CloudNationHQ/terraform-azure-costs/issues/5)) ([2dfef91](https://github.com/CloudNationHQ/terraform-azure-costs/commit/2dfef91af2cc7dd99bebe04dadaeac8eb80ba2aa))
+
 ## [1.1.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.0.0...v1.1.0) (2024-11-12)
 
 
