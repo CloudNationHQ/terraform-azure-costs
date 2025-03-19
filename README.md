@@ -1,4 +1,4 @@
-# Costs Module
+# Costs
 
 This terraform module streamlines the creation of multiple resources related to consumption and costs.
 
