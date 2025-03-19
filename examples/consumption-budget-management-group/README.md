@@ -1,41 +1,5 @@
-# Consumption Budget Management Group
+This example illustrates management group consumption budgets.
 
-This example illustrates one management group consumption budget. Multiple consumption budgets can be added under the consumption_budget_management_groups key.
+## Notes
 
-## Types
-
-```hcl
-config = object({
-  consumption_budget_management_groups = map(object({
-    name                = optional(string)
-    management_group_id = string
-    amount              = number
-    time_grain          = optional(string)
-    time_period = object({
-      start_date = string
-      end_date   = optional(string)
-    })
-
-    notifications = map(object({
-      operator       = string
-      threshold      = number
-      threshold_type = optional(string)
-      contact_emails = optional(list(string))
-      enabled        = optional(bool)
-    }))
-
-    filter = optional(object({
-      dimensions = optional(map(object({
-        name     = string
-        operator = string
-        values   = list(string)
-      })))
-      tags = optional(map(object({
-        name     = string
-        operator = string
-        values   = list(string)
-      })))
-    }))
-  }))
-})
-```
+To create the budgets, ensure the deployment identity has appropriate permissions at the management group scope.

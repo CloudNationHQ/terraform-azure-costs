@@ -48,8 +48,9 @@ module "costs" {
         amount     = 100
         time_grain = "Monthly"
         time_period = {
-          start_date = "2024-10-01T00:00:00Z"
-          end_date   = timestamp()
+          # "2026-01-01T00:00:00Z" format
+          start_date = formatdate("YYYY-MM-01'T'00:00:00'Z'", timestamp())
+          end_date   = formatdate("YYYY-MM-01'T'00:00:00'Z'", timeadd(timestamp(), "1440h"))
         }
 
         filter = {
