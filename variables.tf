@@ -31,9 +31,9 @@ variable "config" {
       }))
     })), {})
     consumption_budget_subscriptions = optional(map(object({
-      name            = optional(string)
-      amount          = number
-      time_grain      = optional(string, "Monthly")
+      name       = optional(string)
+      amount     = number
+      time_grain = optional(string, "Monthly")
       time_period = object({
         start_date = string
         end_date   = optional(string, null)

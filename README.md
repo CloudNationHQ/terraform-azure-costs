@@ -2,72 +2,182 @@
 
 This terraform module streamlines the creation of multiple resources related to consumption and costs.
 
-## Goals
-
-The main objective is to create a more logic data structure, achieved by combining and grouping related resources together in a complex object.
-
-The structure of the module promotes reusability. It's intended to be a repeatable component, simplifying the process of building diverse workloads and platform accelerators consistently.
-
-A primary goal is to utilize keys and values in the object that correspond to the REST API's structure. This enables us to carry out iterations, increasing its practical value as time goes on.
-
-A last key goal is to separate logic from configuration in the module, thereby enhancing its scalability, ease of customization, and manageability.
-
-## Non-Goals
-
-These modules are not intended to be complete, ready-to-use solutions; they are designed as components for creating your own patterns.
-
-They are not tailored for a single use case but are meant to be versatile and applicable to a range of scenarios.
-
-Security standardization is applied at the pattern level, while the modules include default values based on best practices but do not enforce specific security standards.
-
-End-to-end testing is not conducted on these modules, as they are individual components and do not undergo the extensive testing reserved for complete patterns or solutions.
-
 ## Features
 
-- Create consumption alerts on Management groups
-- Create consumption alerts on Subscriptions
-- Create consumption alerts Resource Groups
-- Create costs anomaly alerts
+Configure budget alerts for management groups
+
+Set up consumption monitoring for subscriptions
+
+Establish spending thresholds for resource groups
+
+Deploy cost anomaly detection alerts
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.3 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.0 |
+The following requirements are needed by this module:
+
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9.3)
+
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.0 |
+The following providers are used by this module:
+
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [azurerm_consumption_budget_management_group.budget](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_management_group) | resource |
-| [azurerm_consumption_budget_resource_group.budget](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_resource_group) | resource |
-| [azurerm_consumption_budget_subscription.budget](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_subscription) | resource |
-| [azurerm_cost_anomaly_alert.caa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cost_anomaly_alert) | resource |
-| [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
+The following resources are used by this module:
 
-## Inputs
+- [azurerm_consumption_budget_management_group.budget](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_management_group) (resource)
+- [azurerm_consumption_budget_resource_group.budget](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_resource_group) (resource)
+- [azurerm_consumption_budget_subscription.budget](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_subscription) (resource)
+- [azurerm_cost_anomaly_alert.caa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cost_anomaly_alert) (resource)
+- [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) (data source)
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_config"></a> [config](#input\_config) | alert related configuration | `any` | n/a | yes |
+## Required Inputs
+
+The following input variables are required:
+
+### <a name="input_config"></a> [config](#input\_config)
+
+Description: configuration for consumption budgets and cost anomaly alerts
+
+Type:
+
+```hcl
+object({
+    consumption_budget_management_groups = optional(map(object({
+      name                = optional(string)
+      management_group_id = string
+      amount              = number
+      time_grain          = optional(string, "Monthly")
+      time_period = optional(object({
+        start_date = string
+        end_date   = optional(string, null)
+      }))
+      notifications = optional(map(object({
+        operator       = string
+        threshold      = number
+        threshold_type = optional(string, "Actual")
+        contact_emails = list(string)
+        enabled        = optional(bool, true)
+      })))
+      filter = optional(object({
+        dimensions = optional(map(object({
+          name     = string
+          operator = optional(string, "In")
+          values   = list(string)
+        })))
+        tags = optional(map(object({
+          name     = string
+          operator = optional(string, "In")
+          values   = list(string)
+        })))
+      }))
+    })), {})
+    consumption_budget_subscriptions = optional(map(object({
+      name       = optional(string)
+      amount     = number
+      time_grain = optional(string, "Monthly")
+      time_period = object({
+        start_date = string
+        end_date   = optional(string, null)
+      })
+      notifications = map(object({
+        operator       = string
+        threshold      = number
+        threshold_type = optional(string, "Actual")
+        contact_emails = optional(list(string), [])
+        contact_groups = optional(list(string), [])
+        contact_roles  = optional(list(string), [])
+        enabled        = optional(bool, true)
+      }))
+      filter = optional(object({
+        dimensions = optional(map(object({
+          name     = string
+          operator = optional(string, "In")
+          values   = list(string)
+        })))
+        tags = optional(map(object({
+          name     = string
+          operator = optional(string, "In")
+          values   = list(string)
+        })))
+      }))
+    })), {})
+    consumption_budget_resource_groups = optional(map(object({
+      name              = optional(string)
+      resource_group_id = string
+      amount            = number
+      time_grain        = optional(string, "Monthly")
+      time_period = optional(object({
+        start_date = string
+        end_date   = optional(string, null)
+      }))
+      notifications = optional(map(object({
+        operator       = string
+        threshold      = number
+        threshold_type = optional(string, "Actual")
+        contact_emails = optional(list(string), [])
+        contact_groups = optional(list(string), [])
+        contact_roles  = optional(list(string), [])
+        enabled        = optional(bool, true)
+      })))
+      filter = object({
+        dimensions = optional(map(object({
+          name     = string
+          operator = optional(string, "In")
+          values   = list(string)
+        })))
+        tags = optional(map(object({
+          name     = string
+          operator = optional(string, "In")
+          values   = list(string)
+        })))
+      })
+    })), {})
+    cost_anomaly_alerts = optional(map(object({
+      name            = optional(string)
+      display_name    = string
+      subscription_id = optional(string)
+      email_addresses = list(string)
+      email_subject   = string
+      message         = optional(string, "Anomaly detected in your Azure subscription")
+    })), {})
+  })
+```
+
+## Optional Inputs
+
+No optional inputs.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_consumption_budget_management_group"></a> [consumption\_budget\_management\_group](#output\_consumption\_budget\_management\_group) | contains all consumption budget management group configuration |
-| <a name="output_consumption_budget_resource_group"></a> [consumption\_budget\_resource\_group](#output\_consumption\_budget\_resource\_group) | contains all consumption budget resource group configuration |
-| <a name="output_consumption_budget_subscription"></a> [consumption\_budget\_subscription](#output\_consumption\_budget\_subscription) | contains all consumption budget subscription configuration |
-| <a name="output_cost_anomaly_alert"></a> [cost\_anomaly\_alert](#output\_cost\_anomaly\_alert) | contains all cost anomaly alert configuration |
+The following outputs are exported:
+
+### <a name="output_consumption_budget_management_group"></a> [consumption\_budget\_management\_group](#output\_consumption\_budget\_management\_group)
+
+Description: contains all consumption budget management group configuration
+
+### <a name="output_consumption_budget_resource_group"></a> [consumption\_budget\_resource\_group](#output\_consumption\_budget\_resource\_group)
+
+Description: contains all consumption budget resource group configuration
+
+### <a name="output_consumption_budget_subscription"></a> [consumption\_budget\_subscription](#output\_consumption\_budget\_subscription)
+
+Description: contains all consumption budget subscription configuration
+
+### <a name="output_cost_anomaly_alert"></a> [cost\_anomaly\_alert](#output\_cost\_anomaly\_alert)
+
+Description: contains all cost anomaly alert configuration
 <!-- END_TF_DOCS -->
+
+## Goals
+
+For more information, please see our [goals and non-goals](./GOALS.md).
 
 ## Testing
 
