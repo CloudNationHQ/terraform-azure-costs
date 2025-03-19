@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.2.1...v1.3.0) (2025-03-19)
+
+
+### Features
+
+* format documentation to include type definitions ([#13](https://github.com/CloudNationHQ/terraform-azure-costs/issues/13)) ([52a571b](https://github.com/CloudNationHQ/terraform-azure-costs/commit/52a571b5cd0a3e48f3ca402b63ace2b69e4cd8cc))
+
 ## [1.2.1](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.2.0...v1.2.1) (2025-02-28)
 
 
