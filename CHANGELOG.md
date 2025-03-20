@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.3.0...v1.4.0) (2025-03-20)
+
+
+### Features
+
+* add missing functionalty anomaly alerts and budgets ([#15](https://github.com/CloudNationHQ/terraform-azure-costs/issues/15)) ([6ffa8a4](https://github.com/CloudNationHQ/terraform-azure-costs/commit/6ffa8a47364927acddb0bbc937d87e143174dbed))
+
 ## [1.3.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.2.1...v1.3.0) (2025-03-19)
 
 
