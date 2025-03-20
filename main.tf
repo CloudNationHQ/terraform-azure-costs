@@ -13,6 +13,7 @@ resource "azurerm_consumption_budget_management_group" "budget" {
   management_group_id = each.value.management_group_id
   amount              = each.value.amount
   time_grain          = each.value.time_grain
+  etag                = each.value.etag
 
   dynamic "time_period" {
     for_each = lookup(each.value, "time_period", null) != null ? [each.value.time_period] : []
@@ -76,6 +77,7 @@ resource "azurerm_consumption_budget_subscription" "budget" {
   subscription_id = data.azurerm_subscription.current.id
   amount          = each.value.amount
   time_grain      = each.value.time_grain
+  etag            = each.value.etag
 
   dynamic "time_period" {
     for_each = lookup(each.value, "time_period", null) != null ? [each.value.time_period] : []
@@ -142,6 +144,7 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
   resource_group_id = each.value.resource_group_id
   amount            = each.value.amount
   time_grain        = each.value.time_grain
+  etag              = each.value.etag
 
   dynamic "time_period" {
     for_each = lookup(each.value, "time_period", null) != null ? [each.value.time_period] : []
@@ -208,8 +211,9 @@ resource "azurerm_cost_anomaly_alert" "caa" {
     each.value.subscription_id, data.azurerm_subscription.current.id
   )
 
-  display_name    = each.value.display_name
-  email_addresses = each.value.email_addresses
-  email_subject   = each.value.email_subject
-  message         = each.value.message
+  display_name       = each.value.display_name
+  email_addresses    = each.value.email_addresses
+  email_subject      = each.value.email_subject
+  message            = each.value.message
+  notification_email = each.value.notification_email
 }

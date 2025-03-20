@@ -6,6 +6,7 @@ variable "config" {
       management_group_id = string
       amount              = number
       time_grain          = optional(string, "Monthly")
+      etag                = optional(string, null)
       time_period = optional(object({
         start_date = string
         end_date   = optional(string, null)
@@ -34,6 +35,7 @@ variable "config" {
       name       = optional(string)
       amount     = number
       time_grain = optional(string, "Monthly")
+      etag       = optional(string, null)
       time_period = object({
         start_date = string
         end_date   = optional(string, null)
@@ -65,6 +67,7 @@ variable "config" {
       resource_group_id = string
       amount            = number
       time_grain        = optional(string, "Monthly")
+      etag              = optional(string, null)
       time_period = optional(object({
         start_date = string
         end_date   = optional(string, null)
@@ -92,12 +95,13 @@ variable "config" {
       })
     })), {})
     cost_anomaly_alerts = optional(map(object({
-      name            = optional(string)
-      display_name    = string
-      subscription_id = optional(string)
-      email_addresses = list(string)
-      email_subject   = string
-      message         = optional(string, "Anomaly detected in your Azure subscription")
+      name               = optional(string)
+      display_name       = string
+      subscription_id    = optional(string)
+      email_addresses    = list(string)
+      email_subject      = string
+      message            = optional(string, "Anomaly detected in your Azure subscription")
+      notification_email = optional(string, null)
     })), {})
   })
 }
