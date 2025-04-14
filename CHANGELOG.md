@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.4.0...v1.4.1) (2025-04-14)
+
+
+### Bug Fixes
+
+* fix submodule generation from makefile ([#18](https://github.com/CloudNationHQ/terraform-azure-costs/issues/18)) ([207c1ba](https://github.com/CloudNationHQ/terraform-azure-costs/commit/207c1bab2e4574d7b2ce69aaacf0ca89f2ddf718))
+
 ## [1.4.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.3.0...v1.4.0) (2025-03-20)
 
 
