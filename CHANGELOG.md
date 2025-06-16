@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.4.1...v1.5.0) (2025-06-16)
+
+
+### Features
+
+* replace deployment code with improved go package ([#21](https://github.com/CloudNationHQ/terraform-azure-costs/issues/21)) ([8e96692](https://github.com/CloudNationHQ/terraform-azure-costs/commit/8e966922f09537f26f34c77be2057ccdb75fb4da))
+
 ## [1.4.1](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.4.0...v1.4.1) (2025-04-14)
 
 
