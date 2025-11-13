@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.5.0...v1.5.1) (2025-11-13)
+
+
+### Bug Fixes
+
+* make filter optional for consumption budget resource_groups ([#25](https://github.com/CloudNationHQ/terraform-azure-costs/issues/25)) ([9e218b8](https://github.com/CloudNationHQ/terraform-azure-costs/commit/9e218b87f9bc4757cfe8070591c28e8e9550b342))
+
 ## [1.5.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.4.1...v1.5.0) (2025-06-16)
 
 
