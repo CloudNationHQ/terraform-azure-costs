@@ -129,7 +129,7 @@ object({
         contact_roles  = optional(list(string), [])
         enabled        = optional(bool, true)
       })))
-      filter = object({
+      filter = optional(object({
         dimensions = optional(map(object({
           name     = string
           operator = optional(string, "In")
@@ -140,7 +140,7 @@ object({
           operator = optional(string, "In")
           values   = list(string)
         })))
-      })
+      }))
     })), {})
     cost_anomaly_alerts = optional(map(object({
       name               = optional(string)
