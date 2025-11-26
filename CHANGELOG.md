@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.5.1...v1.6.0) (2025-11-26)
+
+
+### Features
+
+* increment all module versions to the latest ([#28](https://github.com/CloudNationHQ/terraform-azure-costs/issues/28)) ([948df8f](https://github.com/CloudNationHQ/terraform-azure-costs/commit/948df8f5b9bf4cd08e1e30628d21361c02f5a207))
+
 ## [1.5.1](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.5.0...v1.5.1) (2025-11-13)
 
 
