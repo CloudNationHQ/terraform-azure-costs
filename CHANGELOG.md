@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.6.0...v2.0.0) (2026-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* this change causes recreates
+
+### Features
+
+* azurerm provider 5 upgrade ([#32](https://github.com/CloudNationHQ/terraform-azure-costs/issues/32)) ([639f4ea](https://github.com/CloudNationHQ/terraform-azure-costs/commit/639f4ea3b866eac413a1672c40ed859105ae5551))
+
 ## [1.6.0](https://github.com/CloudNationHQ/terraform-azure-costs/compare/v1.5.1...v1.6.0) (2025-11-26)
 
 
