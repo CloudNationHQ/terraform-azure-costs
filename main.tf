@@ -1,13 +1,11 @@
-data "azurerm_subscription" "current" {}
+data "azurerm_subscription" "this" {}
 
 # consumption budget management group
-resource "azurerm_consumption_budget_management_group" "budget" {
-  for_each = {
-    for key, cbmg in lookup(var.config, "consumption_budget_management_groups", {}) : key => cbmg
-  }
+resource "azurerm_consumption_budget_management_group" "this" {
+  for_each = var.costs.consumption_budget_management_groups
 
-  name = try(
-    each.value.name, "cbmg-${each.key}"
+  name = coalesce(
+    each.value.name, each.key
   )
 
   management_group_id = each.value.management_group_id
@@ -16,7 +14,8 @@ resource "azurerm_consumption_budget_management_group" "budget" {
   etag                = each.value.etag
 
   dynamic "time_period" {
-    for_each = lookup(each.value, "time_period", null) != null ? [each.value.time_period] : []
+    for_each = each.value.time_period != null ? { "this" = each.value.time_period } : {}
+
     content {
       start_date = time_period.value.start_date
       end_date   = time_period.value.end_date
@@ -24,9 +23,8 @@ resource "azurerm_consumption_budget_management_group" "budget" {
   }
 
   dynamic "notification" {
-    for_each = {
-      for key, notification in lookup(each.value, "notifications", {}) : key => notification
-    }
+    for_each = each.value.notifications
+
     content {
       operator       = notification.value.operator
       threshold      = notification.value.threshold
@@ -37,23 +35,22 @@ resource "azurerm_consumption_budget_management_group" "budget" {
   }
 
   dynamic "filter" {
-    for_each = lookup(each.value, "filter", null) != null ? [each.value.filter] : []
+    for_each = each.value.filter != null ? { "this" = each.value.filter } : {}
 
     content {
       dynamic "dimension" {
-        for_each = {
-          for key, dimension in lookup(filter.value, "dimensions", {}) : key => dimension
-        }
+        for_each = filter.value.dimensions
+
         content {
           name     = dimension.value.name
           operator = dimension.value.operator
           values   = dimension.value.values
         }
       }
+
       dynamic "tag" {
-        for_each = {
-          for key, tag in lookup(filter.value, "tags", {}) : key => tag
-        }
+        for_each = filter.value.tags
+
         content {
           name     = tag.value.name
           operator = tag.value.operator
@@ -65,33 +62,26 @@ resource "azurerm_consumption_budget_management_group" "budget" {
 }
 
 # consumption budget subscriptions
-resource "azurerm_consumption_budget_subscription" "budget" {
-  for_each = {
-    for key, cbs in lookup(var.config, "consumption_budget_subscriptions", {}) : key => cbs
-  }
+resource "azurerm_consumption_budget_subscription" "this" {
+  for_each = var.costs.consumption_budget_subscriptions
 
-  name = try(
-    each.value.name, "cbs-${each.key}"
+  name = coalesce(
+    each.value.name, each.key
   )
 
-  subscription_id = data.azurerm_subscription.current.id
+  subscription_id = data.azurerm_subscription.this.id
   amount          = each.value.amount
   time_grain      = each.value.time_grain
   etag            = each.value.etag
 
-  dynamic "time_period" {
-    for_each = lookup(each.value, "time_period", null) != null ? [each.value.time_period] : []
-
-    content {
-      start_date = time_period.value.start_date
-      end_date   = time_period.value.end_date
-    }
+  time_period {
+    start_date = each.value.time_period.start_date
+    end_date   = each.value.time_period.end_date
   }
 
   dynamic "notification" {
-    for_each = {
-      for key, notification in lookup(each.value, "notifications", {}) : key => notification
-    }
+    for_each = each.value.notifications
+
     content {
       operator       = notification.value.operator
       threshold      = notification.value.threshold
@@ -104,23 +94,22 @@ resource "azurerm_consumption_budget_subscription" "budget" {
   }
 
   dynamic "filter" {
-    for_each = lookup(each.value, "filter", null) != null ? [each.value.filter] : []
+    for_each = each.value.filter != null ? { "this" = each.value.filter } : {}
 
     content {
       dynamic "dimension" {
-        for_each = {
-          for key, dimension in lookup(filter.value, "dimensions", {}) : key => dimension
-        }
+        for_each = filter.value.dimensions
+
         content {
           name     = dimension.value.name
           operator = dimension.value.operator
           values   = dimension.value.values
         }
       }
+
       dynamic "tag" {
-        for_each = {
-          for key, tag in lookup(filter.value, "tags", {}) : key => tag
-        }
+        for_each = filter.value.tags
+
         content {
           name     = tag.value.name
           operator = tag.value.operator
@@ -132,13 +121,11 @@ resource "azurerm_consumption_budget_subscription" "budget" {
 }
 
 # consumption budget resource groups
-resource "azurerm_consumption_budget_resource_group" "budget" {
-  for_each = {
-    for key, cbrg in lookup(var.config, "consumption_budget_resource_groups", {}) : key => cbrg
-  }
+resource "azurerm_consumption_budget_resource_group" "this" {
+  for_each = var.costs.consumption_budget_resource_groups
 
-  name = try(
-    each.value.name, "cbrg-${each.key}"
+  name = coalesce(
+    each.value.name, each.key
   )
 
   resource_group_id = each.value.resource_group_id
@@ -147,7 +134,8 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
   etag              = each.value.etag
 
   dynamic "time_period" {
-    for_each = lookup(each.value, "time_period", null) != null ? [each.value.time_period] : []
+    for_each = each.value.time_period != null ? { "this" = each.value.time_period } : {}
+
     content {
       start_date = time_period.value.start_date
       end_date   = time_period.value.end_date
@@ -155,9 +143,8 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
   }
 
   dynamic "notification" {
-    for_each = {
-      for key, notification in lookup(each.value, "notifications", {}) : key => notification
-    }
+    for_each = each.value.notifications
+
     content {
       operator       = notification.value.operator
       threshold      = notification.value.threshold
@@ -170,23 +157,22 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
   }
 
   dynamic "filter" {
-    for_each = lookup(each.value, "filter", null) != null ? [each.value.filter] : []
+    for_each = each.value.filter != null ? { "this" = each.value.filter } : {}
 
     content {
       dynamic "dimension" {
-        for_each = {
-          for key, dimension in lookup(filter.value, "dimensions", {}) : key => dimension
-        }
+        for_each = filter.value.dimensions
+
         content {
           name     = dimension.value.name
           operator = dimension.value.operator
           values   = dimension.value.values
         }
       }
+
       dynamic "tag" {
-        for_each = {
-          for key, tag in lookup(filter.value, "tags", {}) : key => tag
-        }
+        for_each = filter.value.tags
+
         content {
           name     = tag.value.name
           operator = tag.value.operator
@@ -198,17 +184,15 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
 }
 
 # cost anomaly alerts
-resource "azurerm_cost_anomaly_alert" "caa" {
-  for_each = {
-    for key, caa in lookup(var.config, "cost_anomaly_alerts", {}) : key => caa
-  }
+resource "azurerm_cost_anomaly_alert" "this" {
+  for_each = var.costs.cost_anomaly_alerts
 
-  name = try(
-    each.value.name, "caa-${each.key}"
+  name = coalesce(
+    each.value.name, each.key
   )
 
-  subscription_id = try(
-    each.value.subscription_id, data.azurerm_subscription.current.id
+  subscription_id = coalesce(
+    each.value.subscription_id, data.azurerm_subscription.this.id
   )
 
   display_name       = each.value.display_name

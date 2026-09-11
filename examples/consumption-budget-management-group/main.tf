@@ -1,13 +1,15 @@
+data "azurerm_client_config" "current" {}
+
 module "naming" {
   source  = "cloudnationhq/naming/azure"
-  version = "~> 0.25"
+  version = "~> 0.32"
 
   suffix = ["demo", "dev"]
 }
 
 module "rg" {
   source  = "cloudnationhq/rg/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   groups = {
     demo = {
@@ -19,18 +21,18 @@ module "rg" {
 
 module "costs" {
   source  = "cloudnationhq/costs/azure"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
-  config = {
+  costs = {
     consumption_budget_management_groups = {
       cbmg1 = {
         name                = "cbmg1"
-        management_group_id = "/providers/Microsoft.Management/managementGroups/Tenant Root Group"
+        management_group_id = "/providers/Microsoft.Management/managementGroups/${data.azurerm_client_config.current.tenant_id}"
         amount              = 100
         time_grain          = "Monthly"
         time_period = {
-          start_date = "2026-01-01T00:00:00Z"
-          end_date   = "2027-01-01T00:00:00Z"
+          start_date = formatdate("YYYY-MM-01'T'00:00:00'Z'", timestamp())
+          end_date   = formatdate("YYYY-MM-01'T'00:00:00'Z'", timeadd(timestamp(), "1440h"))
         }
 
         filter = {

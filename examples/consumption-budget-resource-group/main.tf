@@ -1,13 +1,13 @@
 module "naming" {
   source  = "cloudnationhq/naming/azure"
-  version = "~> 0.25"
+  version = "~> 0.32"
 
   suffix = ["demo", "dev"]
 }
 
 module "rg" {
   source  = "cloudnationhq/rg/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   groups = {
     demo = {
@@ -19,12 +19,13 @@ module "rg" {
 
 module "mag" {
   source  = "cloudnationhq/mag/azure"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   groups = {
     demo = {
       name                = "mag-demo-dev-email"
       resource_group_name = module.rg.groups.demo.name
+      location            = "global"
       short_name          = "mag-email"
 
       email_receiver = {
@@ -39,9 +40,9 @@ module "mag" {
 
 module "costs" {
   source  = "cloudnationhq/costs/azure"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
-  config = {
+  costs = {
     consumption_budget_resource_groups = {
       cbrg1 = {
         name              = "cbrg1"
